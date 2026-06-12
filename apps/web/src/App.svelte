@@ -67,15 +67,13 @@
 
     <ThemeToggle />
 
-    {#if !isEmbedded}
-      <button
-        class="rounded border border-divider bg-surface px-2 py-0.5 text-xs text-muted transition hover:border-accent hover:bg-elevated"
-        onclick={() => (app.showSettings = true)}
-        title="Configure source, vehicle profile, logging"
-      >
-        Settings
-      </button>
-    {/if}
+    <button
+      class="rounded border border-divider bg-surface px-2 py-0.5 text-xs text-muted transition hover:border-accent hover:bg-elevated"
+      onclick={() => (app.showSettings = true)}
+      title="Configure source, vehicle profile, logging"
+    >
+      Settings
+    </button>
 
     <ConnectButton {connect} {disconnect} />
   </header>
