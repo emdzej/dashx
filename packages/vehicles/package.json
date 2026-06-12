@@ -1,0 +1,33 @@
+{
+  "name": "@emdzej/dashx-vehicles",
+  "version": "0.1.0",
+  "description": "Per-vehicle CAN signal tables for DASHX. v1 ships BMW E46 PT-CAN — MS42 (M52TU) + MS43 (M54) DME, MK60 DSC, IKE.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run --passWithNoTests",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist .turbo *.tsbuildinfo"
+  },
+  "dependencies": {
+    "@emdzej/dashx-can-decoder": "workspace:*"
+  },
+  "devDependencies": {
+    "vitest": "^2.1.8"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/emdzej/dashx.git",
+    "directory": "packages/vehicles"
+  },
+  "license": "SEE LICENSE IN LICENSE"
+}

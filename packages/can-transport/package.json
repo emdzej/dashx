@@ -1,0 +1,35 @@
+{
+  "name": "@emdzej/dashx-can-transport",
+  "version": "0.1.0",
+  "description": "CanTransport interface + implementations for DASHX. Ships RpcCanTransport (wraps @emdzej/bimmerz-rpc-can), SerialCanTransport (SLCAN over Web Serial), and SlcanWsTransport (SLCAN over WebSocket).",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run --passWithNoTests",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist .turbo *.tsbuildinfo"
+  },
+  "dependencies": {
+    "@emdzej/dashx-can-decoder": "workspace:*",
+    "@emdzej/bimmerz-rpc-can": "^0.1.0",
+    "@emdzej/bimmerz-rpc-core": "^0.1.0"
+  },
+  "devDependencies": {
+    "vitest": "^2.1.8"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/emdzej/dashx.git",
+    "directory": "packages/can-transport"
+  },
+  "license": "SEE LICENSE IN LICENSE"
+}

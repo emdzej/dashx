@@ -1,0 +1,30 @@
+{
+  "name": "@emdzej/dashx-can-decoder",
+  "version": "0.1.0",
+  "description": "Frame + signal contracts for DASHX. CanFrame shape, SignalDecoder type, byte-helper utilities (leU16/beU16/scaled). Used by per-vehicle profiles and the web app's reactive decode pipeline.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run --passWithNoTests",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist .turbo *.tsbuildinfo"
+  },
+  "devDependencies": {
+    "vitest": "^2.1.8"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/emdzej/dashx.git",
+    "directory": "packages/can-decoder"
+  },
+  "license": "SEE LICENSE IN LICENSE"
+}

@@ -1,0 +1,10 @@
+node_modules
+dist
+dist-embedded
+.turbo
+*.tsbuildinfo
+.DS_Store
+coverage
+
+# Local agent (Claude Code) project state — not for the repo.
+.claude/
