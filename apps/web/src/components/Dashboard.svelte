@@ -23,7 +23,6 @@
     BarWidget,
     LampWidget,
     ValueWidget,
-    FrameLog,
   } from "@emdzej/dashx-widgets";
 
   /* Tooltip helper — looks up the wiki-cited description for a
@@ -194,7 +193,6 @@
     return typeof v === "boolean" ? v : null;
   }
 
-  let showFrameLog = $state(false);
 </script>
 
 <div class="mx-auto flex max-w-6xl flex-col gap-6 p-4">
@@ -485,17 +483,4 @@
     {/if}
   </section>
 
-  <!-- Frame log (debug) -->
-  <details
-    class="rounded border border-divider bg-surface"
-    bind:open={showFrameLog}
-  >
-    <summary class="cursor-pointer select-none px-3 py-2 text-xs font-semibold uppercase tracking-wider text-faint">
-      Frame log
-      <span class="ml-2 text-faint">({app.frames.length} frames)</span>
-    </summary>
-    <div class="max-h-96 overflow-auto">
-      <FrameLog frames={app.frames} />
-    </div>
-  </details>
 </div>

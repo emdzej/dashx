@@ -5,8 +5,10 @@
   import { isEmbedded } from "./lib/embedded";
   import { isDarkTheme } from "./lib/theme.svelte";
   import { BUNDLED_DBC_IDS, loadBundledDbcProfile } from "./lib/dbc-profiles.svelte";
+  import { chartConfig } from "@emdzej/dashx-widgets";
   import Dashboard from "./components/Dashboard.svelte";
   import DynamicDashboard from "./components/DynamicDashboard.svelte";
+  import FrameLogPanel from "./components/FrameLogPanel.svelte";
   import SettingsDialog from "./components/SettingsDialog.svelte";
   import AboutDialog from "./components/AboutDialog.svelte";
   import ConnectButton from "./components/ConnectButton.svelte";
@@ -44,6 +46,13 @@
           }
         });
     }
+  });
+
+  /* Sync the global chart window from persisted config. One source
+     of truth: `app.config.chartWindowSec` (persisted via Settings),
+     mirrored into the widgets package's reactive `chartConfig`. */
+  $effect(() => {
+    chartConfig.windowSec = app.config.chartWindowSec;
   });
 
   /* Apply / clear the `.dark` class on <html> based on the resolved
@@ -117,13 +126,21 @@
     </div>
   {/if}
 
-  <main class="min-h-0 flex-1 overflow-auto">
-    {#if app.dbcProfile}
-      <DynamicDashboard />
-    {:else}
-      <Dashboard />
-    {/if}
-  </main>
+  <!-- Body row: dashboard fills the flex-1 area, frame log lives as
+       a collapsable side panel to its right. The dashboard scrolls
+       vertically inside the inner <div>; the panel manages its own
+       overflow. min-h-0 on both is the well-known fix for nested
+       flexbox + overflow-auto. -->
+  <div class="flex min-h-0 flex-1">
+    <main class="min-h-0 flex-1 overflow-auto">
+      {#if app.dbcProfile}
+        <DynamicDashboard />
+      {:else}
+        <Dashboard />
+      {/if}
+    </main>
+    <FrameLogPanel />
+  </div>
 </div>
 
 <SettingsDialog />

@@ -262,6 +262,26 @@
         </fieldset>
 
         <fieldset class="space-y-2 rounded border border-divider bg-base p-3">
+          <legend class="px-1 text-xs font-semibold uppercase tracking-wider text-faint">Charts</legend>
+          <label class="block text-xs text-muted">
+            History window (seconds)
+            <input
+              type="number"
+              min="2"
+              max="600"
+              step="1"
+              class="mt-0.5 w-24 rounded border border-rule bg-surface px-2 py-1 font-mono text-sm text-foreground"
+              bind:value={app.config.chartWindowSec}
+            />
+            <span class="ml-2 text-faint">
+              Controls the X-axis range and per-widget buffer size for
+              every history chart. 10-30 s is the sweet spot for
+              spotting transients; 60+ s is useful for slow trends.
+            </span>
+          </label>
+        </fieldset>
+
+        <fieldset class="space-y-2 rounded border border-divider bg-base p-3">
           <legend class="px-1 text-xs font-semibold uppercase tracking-wider text-faint">
             OBD-II (Mode 01 diagnostic poll)
           </legend>

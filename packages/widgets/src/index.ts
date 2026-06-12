@@ -14,3 +14,6 @@ export { default as BarWidget } from "./BarWidget.svelte";
 export { default as LampWidget } from "./LampWidget.svelte";
 export { default as ValueWidget } from "./ValueWidget.svelte";
 export { default as FrameLog } from "./FrameLog.svelte";
+export { default as HistoryChart } from "./HistoryChart.svelte";
+export { useHistory, type History, type UseHistoryOptions } from "./history.svelte.js";
+export { chartConfig } from "./chart-config.svelte.js";

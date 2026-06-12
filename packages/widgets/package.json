@@ -32,5 +32,8 @@
     "url": "https://github.com/emdzej/dashx.git",
     "directory": "packages/widgets"
   },
-  "license": "SEE LICENSE IN LICENSE"
+  "license": "SEE LICENSE IN LICENSE",
+  "dependencies": {
+    "uplot": "^1.6.32"
+  }
 }

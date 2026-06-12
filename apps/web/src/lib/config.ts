@@ -84,6 +84,9 @@ export interface WebConfig {
   serialWsUrl?: string;
   /** Light / dark / system. Default `"system"` (matches ncsx). */
   theme: ThemeChoice;
+  /** Time window in seconds for widget history charts. Drives the
+   *  X-axis range AND the rolling-buffer cap in `useHistory`. */
+  chartWindowSec: number;
   /** OBD-II Mode 01 — passive sniff + optional active polling. */
   obd2: Obd2Config;
   /** Persisted bimmerz-logger config. */
@@ -113,6 +116,7 @@ const DEFAULT_CONFIG: WebConfig = {
   rpcUrl: "ws://localhost:8080/rpc/can/0",
   serialWsUrl: "ws://localhost:8081/slcan",
   theme: "system",
+  chartWindowSec: 15,
   obd2: {
     passiveSniff: true,
     activePoll: false,
