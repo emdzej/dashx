@@ -70,9 +70,23 @@ function onFrame(frame: TimestampedCanFrame): void {
 
   const decoders = decoderIndex.get(frame.id);
   if (!decoders) return;
+  let mutated = false;
   for (const signal of decoders) {
     const v = signal.decode(frame);
-    if (v !== null) app.signals[signal.id] = v;
+    if (v !== null) {
+      app.signals[signal.id] = v;
+      mutated = true;
+    }
+  }
+  /* When a DBC + overlay profile is active and any primitive signal
+     just changed, re-evaluate derived expressions. We pass the full
+     `app.signals` map as the scope; the expression layer reads only
+     the variables each expression references. Cheap — typical
+     overlay has <20 derived signals each with O(1) eval. */
+  if (mutated && app.dbcProfile) {
+    app.dbcProfile.recomputeDerived(app.signals, (id, value) => {
+      app.signals[id] = value;
+    });
   }
 }
 

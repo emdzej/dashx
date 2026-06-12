@@ -18,6 +18,54 @@ export { bmwE46Ms42, bmwE46Ms43 };
 export { describeSignal } from "./descriptions.js";
 export * from "./bmw-e46-shared.js";
 
+/* DBC + overlay machinery — alternative to the inline TS profiles.
+   Both code paths produce a `VehicleProfile`; the dashboard can
+   surface them side-by-side for A/B comparison while the DBC path
+   matures. */
+export {
+  parseDbc,
+  type DbcDatabase,
+  type DbcMessage,
+  type DbcSignal,
+  type DbcSign,
+  type DbcEndian,
+  type DbcMultiplex,
+  type DbcAttrDef,
+  type DbcAttrType,
+} from "./dbc/parser.js";
+export {
+  compileDbc,
+  compileDbcText,
+  readBitsLe,
+  readBitsBe,
+  signExtend,
+  type CompiledDbc,
+} from "./dbc/compiler.js";
+export {
+  compileExpression,
+  type CompiledExpression,
+  type ExprScope,
+} from "./overlay/expr.js";
+export {
+  composeProfile,
+  composeProfileFromJson,
+  type ComposedProfile,
+  type SignalMetadata,
+} from "./overlay/loader.js";
+export {
+  type Overlay,
+  type OverlayProfile,
+  type OverlaySignalOverride,
+  type OverlayDerived,
+  type OverlayGroup,
+  type WidgetKind,
+} from "./overlay/types.js";
+export {
+  loadProfileFromVfs,
+  loadBundledProfile,
+  type LoadProfileOptions,
+} from "./profiles/loader.js";
+
 /**
  * Ordered list of profiles offered by the picker UI. Order is the
  * default sort — most-likely-used first.

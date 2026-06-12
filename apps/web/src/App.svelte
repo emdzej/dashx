@@ -1,9 +1,12 @@
 <script lang="ts">
+  import { onMount } from "svelte";
   import { app } from "./lib/state.svelte";
   import { connect, disconnect } from "./lib/connection.svelte";
   import { isEmbedded } from "./lib/embedded";
   import { isDarkTheme } from "./lib/theme.svelte";
+  import { BUNDLED_DBC_IDS, loadBundledDbcProfile } from "./lib/dbc-profiles.svelte";
   import Dashboard from "./components/Dashboard.svelte";
+  import DynamicDashboard from "./components/DynamicDashboard.svelte";
   import SettingsDialog from "./components/SettingsDialog.svelte";
   import AboutDialog from "./components/AboutDialog.svelte";
   import ConnectButton from "./components/ConnectButton.svelte";
@@ -18,6 +21,28 @@
       case "rpc": return "rpc";
       case "serial": return "slcan";
       case "serial-ws": return "slcan-ws";
+    }
+  });
+
+  /* Auto-load the bundled DBC + overlay profile at boot when the
+     persisted vehicle id matches one. Without this, refreshing the
+     page with a DBC profile selected falls back to the inline TS
+     profile (since `app.dbcProfile` starts null). We swallow load
+     errors — Settings shows the error path with full context. */
+  onMount(() => {
+    const id = app.config.vehicle;
+    if (BUNDLED_DBC_IDS.includes(id)) {
+      void loadBundledDbcProfile(id)
+        .then((composed) => {
+          app.profile = composed.profile;
+          app.dbcProfile = composed;
+          app.signalMeta = composed.metadata;
+        })
+        .catch((err) => {
+          if (typeof console !== "undefined") {
+            console.warn("[dashx] failed to load bundled DBC profile", id, err);
+          }
+        });
     }
   });
 
@@ -93,7 +118,11 @@
   {/if}
 
   <main class="min-h-0 flex-1 overflow-auto">
-    <Dashboard />
+    {#if app.dbcProfile}
+      <DynamicDashboard />
+    {:else}
+      <Dashboard />
+    {/if}
   </main>
 </div>
 

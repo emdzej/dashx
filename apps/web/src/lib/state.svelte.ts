@@ -1,5 +1,5 @@
 import type { SignalValue, VehicleProfile } from "@emdzej/dashx-can-decoder";
-import { findProfile } from "@emdzej/dashx-vehicles";
+import { findProfile, type ComposedProfile, type SignalMetadata } from "@emdzej/dashx-vehicles";
 import { loadConfig, type WebConfig } from "./config";
 
 export type AppView = "dashboard";
@@ -15,6 +15,16 @@ interface AppState {
   config: WebConfig;
   /** Resolved from `config.vehicle` — driven by Settings picker. */
   profile: VehicleProfile | null;
+  /** When the active profile came from a DBC + overlay (vs an
+   *  inline TS profile), this holds the composed result — including
+   *  per-signal UI metadata + the derived-signal recomputer. Null
+   *  for inline TS profiles. */
+  dbcProfile: ComposedProfile | null;
+  /** UI metadata for the active profile, keyed by signal id. For
+   *  inline TS profiles this is empty (widgets fall back to their
+   *  own `app.signals` keys + per-widget tooltip lookup). For DBC
+   *  profiles this drives the dashboard layout dynamically. */
+  signalMeta: Map<string, SignalMetadata>;
   /** Connection state surfaced to the header + the dashboard. */
   status: ConnectionStatus;
   /** Last decoded broadcast signals — keyed by `SignalDecoder.id`. */
@@ -51,6 +61,8 @@ export const app = $state<AppState>({
   view: "dashboard",
   config: initialConfig,
   profile: findProfile(initialConfig.vehicle) ?? null,
+  dbcProfile: null,
+  signalMeta: new Map(),
   status: { kind: "disconnected" },
   signals: {},
   obd2: {},

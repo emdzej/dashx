@@ -5,6 +5,89 @@
   import { applyObd2Config } from "../lib/connection.svelte";
   import { PROFILES, findProfile } from "@emdzej/dashx-vehicles";
   import { PID_CATALOG } from "@emdzej/dashx-can-obd2";
+  import {
+    BUNDLED_DBC_IDS,
+    loadBundledDbcProfile,
+    loadUserDbcProfile,
+  } from "../lib/dbc-profiles.svelte";
+  import { FsaDirectory } from "@emdzej/bimmerz-vfs";
+
+  let dbcStatus = $state<{ kind: "idle" } | { kind: "loading"; id: string } | { kind: "error"; msg: string }>({ kind: "idle" });
+
+  /* Tag DBC profiles in the dropdown with a marker prefix so we can
+     tell them apart from the inline TS profiles when reacting to a
+     pick. The dropdown value stays the profile id; we just look up
+     across both registries. */
+  type ProfileOption = { id: string; label: string; kind: "ts" | "dbc-bundled" | "dbc-custom" };
+  const profileOptions: ProfileOption[] = [
+    ...PROFILES.map((p) => ({ id: p.id, label: p.label + "  (inline TS)", kind: "ts" as const })),
+    ...BUNDLED_DBC_IDS.map((id) => ({
+      id,
+      label: id.replace("-dbc", "") + "  (DBC + overlay)",
+      kind: "dbc-bundled" as const,
+    })),
+  ];
+
+  async function applyVehicleSelection(id: string): Promise<void> {
+    dbcStatus = { kind: "idle" };
+    const tsProfile = findProfile(id);
+    if (tsProfile) {
+      app.profile = tsProfile;
+      app.dbcProfile = null;
+      app.signalMeta = new Map();
+      return;
+    }
+    if (BUNDLED_DBC_IDS.includes(id)) {
+      dbcStatus = { kind: "loading", id };
+      try {
+        const composed = await loadBundledDbcProfile(id);
+        app.profile = composed.profile;
+        app.dbcProfile = composed;
+        app.signalMeta = composed.metadata;
+        dbcStatus = { kind: "idle" };
+      } catch (err) {
+        dbcStatus = { kind: "error", msg: err instanceof Error ? err.message : String(err) };
+      }
+    }
+  }
+
+  /** Pick a folder containing a `.dbc` + `.overlay.json` pair via
+   *  the FSA picker. Wraps the folder in `FsaDirectory` and hands
+   *  it to the VFS loader. */
+  async function pickCustomDbcFolder(): Promise<void> {
+    type ShowDirPicker = (opts?: { id?: string }) => Promise<FileSystemDirectoryHandle>;
+    const picker = (window as unknown as { showDirectoryPicker?: ShowDirPicker }).showDirectoryPicker;
+    if (!picker) {
+      dbcStatus = { kind: "error", msg: "File System Access not available — use Chrome/Edge." };
+      return;
+    }
+    dbcStatus = { kind: "loading", id: "custom" };
+    try {
+      const handle = await picker({ id: "dashx-dbc" });
+      const root = new FsaDirectory(handle);
+      /* Look for the first .overlay.json in the chosen folder. */
+      const entries = await root.entries();
+      const overlayEntry = entries.find(
+        (e) => e.kind === "file" && /\.overlay\.json$/i.test(e.name),
+      );
+      if (!overlayEntry) {
+        dbcStatus = { kind: "error", msg: "No .overlay.json in selected folder." };
+        return;
+      }
+      const composed = await loadUserDbcProfile(root, overlayEntry.name);
+      app.profile = composed.profile;
+      app.dbcProfile = composed;
+      app.signalMeta = composed.metadata;
+      app.config.vehicle = composed.profile.id;
+      dbcStatus = { kind: "idle" };
+    } catch (err) {
+      if (err instanceof DOMException && err.name === "AbortError") {
+        dbcStatus = { kind: "idle" };
+        return;
+      }
+      dbcStatus = { kind: "error", msg: err instanceof Error ? err.message : String(err) };
+    }
+  }
 
   function toggleObd2Pid(id: string): void {
     const i = app.config.obd2.pids.indexOf(id);
@@ -131,16 +214,51 @@
             Profile
             <select
               class="mt-0.5 w-full rounded border border-rule bg-surface px-2 py-1 text-sm text-foreground"
-              bind:value={app.config.vehicle}
+              value={app.config.vehicle}
+              onchange={(e) => {
+                const id = (e.currentTarget as HTMLSelectElement).value;
+                app.config.vehicle = id;
+                void applyVehicleSelection(id);
+              }}
             >
-              {#each PROFILES as p (p.id)}
-                <option value={p.id}>{p.label}</option>
+              {#each profileOptions as opt (opt.id)}
+                <option value={opt.id}>{opt.label}</option>
               {/each}
             </select>
             <span class="mt-1 block text-faint">
-              Drives the dashboard widget grid and the decoder set.
+              Two flavours: inline TypeScript profiles (the hand-written
+              decoders) and DBC + overlay profiles (loaded from
+              <code class="font-mono">/profiles/&lt;id&gt;/</code>). Both share
+              the bus parsing; the DBC path uses a declarative file + JSON
+              overlay so you can iterate without recompiling.
             </span>
           </label>
+
+          <div class="flex flex-wrap items-center gap-2 text-xs">
+            <button
+              type="button"
+              class="rounded border border-divider bg-surface px-2 py-1 text-muted hover:border-accent hover:bg-elevated"
+              onclick={pickCustomDbcFolder}
+            >
+              Load custom DBC folder…
+            </button>
+            {#if dbcStatus.kind === "loading"}
+              <span class="text-faint">Loading {dbcStatus.id}…</span>
+            {:else if dbcStatus.kind === "error"}
+              <span class="rounded bg-red-500/10 px-2 py-0.5 text-red-500" title={dbcStatus.msg}>
+                Error: {dbcStatus.msg.slice(0, 60)}{dbcStatus.msg.length > 60 ? "…" : ""}
+              </span>
+            {/if}
+          </div>
+          {#if app.dbcProfile}
+            <div class="rounded border border-accent/30 bg-accent/5 p-2 text-xs">
+              <div class="font-semibold text-accent">DBC + overlay active</div>
+              <div class="text-faint">
+                {app.dbcProfile.profile.signals.length} signals decoded
+                ({app.signalMeta.size} with metadata) · {app.dbcProfile.groups.length} groups
+              </div>
+            </div>
+          {/if}
         </fieldset>
 
         <fieldset class="space-y-2 rounded border border-divider bg-base p-3">

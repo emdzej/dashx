@@ -16,7 +16,9 @@
     "clean": "rm -rf dist .turbo *.tsbuildinfo"
   },
   "dependencies": {
-    "@emdzej/dashx-can-decoder": "workspace:*"
+    "@emdzej/bimmerz-vfs": "^0.1.0",
+    "@emdzej/dashx-can-decoder": "workspace:*",
+    "expr-eval": "^2.0.2"
   },
   "devDependencies": {
     "vitest": "^2.1.8"

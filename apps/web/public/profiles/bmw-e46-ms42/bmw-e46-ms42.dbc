@@ -1,0 +1,182 @@
+VERSION "DASHX MS42 0.1.0 — generated from MS4X wiki canon"
+
+
+NS_ :
+    CM_
+    BA_DEF_
+    BA_
+    VAL_
+    VAL_TABLE_
+    BA_DEF_DEF_
+
+BS_:
+
+BU_: DME DSC IKE LWS EGS
+
+VAL_TABLE_ ChargeIntervention 0 "OK_or_no_ASR" 1 "IGA_retard_limit" 2 "actuators_closed" 3 "limited_dynamics" ;
+VAL_TABLE_ CruiseSwitch 0 "none" 1 "set_accel" 2 "decel" 3 "resume" 4 "deactivate" 7 "error" ;
+VAL_TABLE_ CruiseState 0 "inactive" 1 "constant" 3 "resume" 5 "set_accel" 7 "decel" ;
+VAL_TABLE_ MuxCode 0 "CAN_LEVEL" 2 "OBD_STEUER" 3 "MD_NORM" ;
+VAL_TABLE_ HdcState 0 "off" 1 "wrong_gear" 2 "not_low_range" 3 "overspeed" 4 "temp_inactive" 5 "enabled" 6 "active" ;
+VAL_TABLE_ ConverterClutch 0 "disengaged" 1 "regulated" 2 "closed" 3 "undefined" ;
+VAL_TABLE_ GearboxMode 0 "Economy" 1 "Manual" 2 "Sport" 4 "Auto" ;
+VAL_TABLE_ GearLever 0 "clear" 1 "1st" 2 "2nd" 3 "3rd" 4 "4th" 5 "D" 6 "N" 7 "R" 8 "P" 9 "5th" 10 "6th" ;
+VAL_TABLE_ Boolean 0 "off" 1 "on" ;
+
+
+BO_ 790 DME1: 8 DME
+   SG_ IGNITION_ON : 0|1@1+ (1,0) [0|1] "" Vector__XXX
+   SG_ CRANK_ERROR : 1|1@1+ (1,0) [0|1] "" Vector__XXX
+   SG_ ASC_ACK : 2|1@1+ (1,0) [0|1] "" Vector__XXX
+   SG_ GEAR_CHANGE_OK : 3|1@1+ (1,0) [0|1] "" Vector__XXX
+   SG_ CHARGE_INTERVENTION_STATE : 4|2@1+ (1,0) [0|3] "" Vector__XXX
+   SG_ MAF_ERROR : 7|1@1+ (1,0) [0|1] "" Vector__XXX
+   SG_ TORQUE_REQUESTED : 8|8@1+ (0.390625,0) [0|100] "%" Vector__XXX
+   SG_ ENGINE_RPM : 16|16@1+ (0.15625,0) [0|7000] "RPM" Vector__XXX
+   SG_ TORQUE_INDICATED : 32|8@1+ (0.390625,0) [0|100] "%" Vector__XXX
+   SG_ TORQUE_LOSS : 40|8@1+ (0.390625,0) [0|100] "%" Vector__XXX
+   SG_ TORQUE_AFTER_CHARGE : 48|8@1+ (0.390625,0) [0|100] "%" Vector__XXX
+   SG_ ERR_AMT_CAN : 56|2@1+ (1,0) [0|3] "" Vector__XXX
+
+BO_ 809 DME2: 8 DME
+   SG_ MUX_CODE M : 6|2@1+ (1,0) [0|3] "" Vector__XXX
+   SG_ MUX_INFO : 0|6@1+ (1,0) [0|63] "" Vector__XXX
+   SG_ COOLANT_TEMP : 8|8@1+ (0.75,-48) [-48|143] "degC" Vector__XXX
+   SG_ AMBIENT_PRESSURE : 16|8@1+ (2,598) [600|1106] "hPa" Vector__XXX
+   SG_ CLUTCH_DEPRESSED : 24|1@1+ (1,0) [0|1] "" Vector__XXX
+   SG_ IDLE_BELOW_THRESH : 25|1@1+ (1,0) [0|1] "" Vector__XXX
+   SG_ ACC1_ACK : 26|1@1+ (1,0) [0|1] "" Vector__XXX
+   SG_ ENGINE_RUNNING : 27|1@1+ (1,0) [0|1] "" Vector__XXX
+   SG_ CRUISE_SWITCH_STATE : 29|3@1+ (1,0) [0|7] "" Vector__XXX
+   SG_ TPS_VIRTUAL : 32|8@1+ (0.390625,0) [0|100] "%" Vector__XXX
+   SG_ PEDAL_POSITION : 40|8@1+ (0.390625,0) [0|100] "%" Vector__XXX
+   SG_ BRAKE_ACTUATED : 48|1@1+ (1,0) [0|1] "" Vector__XXX
+   SG_ BRAKE_SWITCH_FAULT : 49|1@1+ (1,0) [0|1] "" Vector__XXX
+   SG_ KICKDOWN : 50|1@1+ (1,0) [0|1] "" Vector__XXX
+   SG_ CRUISE_ACTIVE_STATE : 51|3@1+ (1,0) [0|7] "" Vector__XXX
+   SG_ SHIFTLOCK_REQUEST : 54|2@1+ (1,0) [0|3] "" Vector__XXX
+
+BO_ 1349 DME4: 8 DME
+   SG_ LAMP_MIL : 1|1@1+ (1,0) [0|1] "" Vector__XXX
+   SG_ LAMP_CRUISE : 3|1@1+ (1,0) [0|1] "" Vector__XXX
+   SG_ LAMP_EML : 4|1@1+ (1,0) [0|1] "" Vector__XXX
+   SG_ LAMP_FUEL_CAP : 6|1@1+ (1,0) [0|1] "" Vector__XXX
+   SG_ FUEL_CONSUMPTION_RAW : 8|16@1+ (1,0) [0|65535] "" Vector__XXX
+   SG_ LAMP_OIL_CONSUMPTION : 24|1@1+ (1,0) [0|1] "" Vector__XXX
+   SG_ LAMP_OIL_LOSS : 25|1@1+ (1,0) [0|1] "" Vector__XXX
+   SG_ LAMP_OIL_SENSOR_FAULT : 26|1@1+ (1,0) [0|1] "" Vector__XXX
+   SG_ LAMP_COOLANT_OVERHEAT : 27|1@1+ (1,0) [0|1] "" Vector__XXX
+   SG_ WARMUP_LEDS : 28|3@1+ (1,0) [0|7] "" Vector__XXX
+
+BO_ 339 ASC1: 8 DSC
+   SG_ ASC_REQUEST : 0|1@1+ (1,0) [0|1] "" Vector__XXX
+   SG_ MSR_REQUEST : 1|1@1+ (1,0) [0|1] "" Vector__XXX
+   SG_ ASC_PASSIVE : 2|1@1+ (1,0) [0|1] "" Vector__XXX
+   SG_ ASC_SWITCH_INFLUENCE : 3|1@1+ (1,0) [0|1] "" Vector__XXX
+   SG_ BRAKE_LIGHT_SWITCH : 4|1@1+ (1,0) [0|1] "" Vector__XXX
+   SG_ BRAKE_ASSIST : 5|1@1+ (1,0) [0|1] "" Vector__XXX
+   SG_ EBV_ACTIVE : 6|1@1+ (1,0) [0|1] "" Vector__XXX
+   SG_ LAMP_ABS : 7|1@1+ (1,0) [0|1] "" Vector__XXX
+   SG_ VSS_RAW : 11|13@1+ (1,0) [0|8191] "" Vector__XXX
+   SG_ ASC_TORQUE : 24|8@1+ (0.390625,0) [0|100] "%" Vector__XXX
+   SG_ MSR_TORQUE : 32|8@1+ (0.390625,0) [0|100] "%" Vector__XXX
+   SG_ ASC_TORQUE_LM : 48|8@1+ (0.390625,0) [0|100] "%" Vector__XXX
+   SG_ ASC_ALIVE : 56|4@1+ (1,0) [0|15] "" Vector__XXX
+
+BO_ 496 ASC2: 8 DSC
+   SG_ WHEEL_SPEED_1_RAW : 0|16@1+ (1,0) [0|65535] "" Vector__XXX
+   SG_ WHEEL_SPEED_2_RAW : 16|16@1+ (1,0) [0|65535] "" Vector__XXX
+   SG_ WHEEL_SPEED_3_RAW : 32|16@1+ (1,0) [0|65535] "" Vector__XXX
+   SG_ WHEEL_SPEED_4_RAW : 48|16@1+ (1,0) [0|65535] "" Vector__XXX
+
+BO_ 499 ASC3: 8 DSC
+   SG_ ACCEL_X_RAW : 24|10@1- (1,0) [-512|511] "" Vector__XXX
+   SG_ DSC_REGULATING : 34|1@1+ (1,0) [0|1] "" Vector__XXX
+   SG_ STEERING_HBA : 35|1@1+ (1,0) [0|1] "" Vector__XXX
+   SG_ ACCEL_Y_RAW : 38|10@1- (1,0) [-512|511] "" Vector__XXX
+
+BO_ 501 LWS1: 8 LWS
+   SG_ STEERING_ANGLE : 7|16@0- (0.04394,0) [-1440|1440] "deg" Vector__XXX
+   SG_ STEERING_VELOCITY : 23|16@0- (0.04394,0) [-1440|1440] "deg/s" Vector__XXX
+   SG_ STEERING_SENSOR_ID : 32|8@1+ (1,0) [0|255] "" Vector__XXX
+   SG_ STEERING_SENSOR_STATUS : 40|4@1+ (1,0) [0|15] "" Vector__XXX
+   SG_ STEERING_ALIVE : 44|4@1+ (1,0) [0|15] "" Vector__XXX
+
+BO_ 504 ASC4: 8 DSC
+   SG_ WHEEL_ACCEL : 0|8@1+ (1,0) [0|255] "" Vector__XXX
+   SG_ HDC_STATE : 8|3@1+ (1,0) [0|7] "" Vector__XXX
+   SG_ HDC_ENABLED : 11|1@1+ (1,0) [0|1] "" Vector__XXX
+   SG_ TRAILER_MSR : 13|1@1+ (1,0) [0|1] "" Vector__XXX
+   SG_ TRAILER_ASC : 14|1@1+ (1,0) [0|1] "" Vector__XXX
+   SG_ OFFROAD_MODE : 15|1@1+ (1,0) [0|1] "" Vector__XXX
+   SG_ BRAKE_PRESSURE : 16|8@1+ (1,0) [0|255] "bar" Vector__XXX
+
+BO_ 1087 EGS1: 8 EGS
+   SG_ TRANS_GEAR : 0|3@1+ (1,0) [0|7] "" Vector__XXX
+   SG_ TRANS_SHIFTING : 3|1@1+ (1,0) [0|1] "" Vector__XXX
+   SG_ TRANS_OBD_DTC : 4|1@1+ (1,0) [0|1] "" Vector__XXX
+   SG_ GEARBOX_PROTECTION : 5|1@1+ (1,0) [0|1] "" Vector__XXX
+   SG_ CONVERTER_CLUTCH_STATE : 6|2@1+ (1,0) [0|3] "" Vector__XXX
+   SG_ GEAR_LEVER : 8|4@1+ (1,0) [0|15] "" Vector__XXX
+   SG_ TCU_OBD_STATE : 12|4@1+ (1,0) [0|15] "" Vector__XXX
+   SG_ GEARBOX_MODE : 21|3@1+ (1,0) [0|7] "" Vector__XXX
+   SG_ TCU_TORQUE_REQUEST : 24|8@1+ (0.390625,0) [0|100] "%" Vector__XXX
+   SG_ OUTPUT_SHAFT_RAW : 32|8@1+ (1,0) [0|255] "" Vector__XXX
+   SG_ TORQUE_CONVERTER_RAW : 56|8@1+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 1555 ICL2: 8 IKE
+   SG_ ODOMETER_RAW : 0|16@1+ (10,0) [0|655350] "km" Vector__XXX
+   SG_ FUEL_LEVEL : 16|7@1+ (1,0) [0|127] "" Vector__XXX
+   SG_ FUEL_RESERVE : 23|1@1+ (1,0) [0|1] "" Vector__XXX
+   SG_ RUNNING_CLOCK_MIN : 24|16@1+ (1,0) [0|65535] "min" Vector__XXX
+   SG_ FUEL_LEVEL_DRIVER : 40|6@1+ (1,0) [0|63] "" Vector__XXX
+
+BO_ 1557 ICL3: 8 IKE
+   SG_ AC_TORQUE_OFFSET : 0|5@1+ (1,0) [0|31] "Nm" Vector__XXX
+   SG_ REQ_LOWER_COOLANT_TEMP : 5|1@1+ (1,0) [0|1] "" Vector__XXX
+   SG_ AC_COMPRESSOR : 6|1@1+ (1,0) [0|1] "" Vector__XXX
+   SG_ AC_REQUEST : 7|1@1+ (1,0) [0|1] "" Vector__XXX
+   SG_ HEAT_REQUEST : 8|1@1+ (1,0) [0|1] "" Vector__XXX
+   SG_ TRAILER_MODE : 9|1@1+ (1,0) [0|1] "" Vector__XXX
+   SG_ NIGHT_LIGHTING : 10|1@1+ (1,0) [0|1] "" Vector__XXX
+   SG_ HOOD_SWITCH : 11|1@1+ (1,0) [0|1] "" Vector__XXX
+   SG_ COOLING_FAN_LEVEL : 12|4@1+ (1,0) [0|15] "" Vector__XXX
+   SG_ RAISED_IDLE : 22|1@1+ (1,0) [0|1] "" Vector__XXX
+   SG_ AMBIENT_TEMP_RAW : 24|8@1+ (1,0) [0|255] "" Vector__XXX
+   SG_ DOOR : 32|1@1+ (1,0) [0|1] "" Vector__XXX
+   SG_ HANDBRAKE : 33|1@1+ (1,0) [0|1] "" Vector__XXX
+   SG_ SUSPENSION : 34|2@1+ (1,0) [0|3] "" Vector__XXX
+   SG_ DISPLAYED_SPEED_RAW : 46|10@1+ (1,0) [0|1023] "" Vector__XXX
+
+
+CM_ BO_ 790 "MS42 DME1 — TQI_MAF_CAN at B6 (vs B7 on MS43), ERR_AMT_CAN at B7.0-1 (vs B6.6-7 on MS43).";
+CM_ BO_ 1349 "MS42 DME4 — B4-B7 are unused. No oil temp, no upshift, no oil pressure lamp, no MSS54 oil level, no Alpina chargelight on MS42.";
+
+CM_ SG_ 790 TORQUE_AFTER_CHARGE "Theoretical post-charge torque TQI_MAF_CAN. MS42 puts this at B6 (MS43 at B7).";
+CM_ SG_ 790 ERR_AMT_CAN "AMT transmission error. MS42 at B7.0-1 (MS43 at B6.6-7).";
+
+
+VAL_ 790 CHARGE_INTERVENTION_STATE ChargeIntervention ;
+VAL_ 809 MUX_CODE MuxCode ;
+VAL_ 809 CRUISE_SWITCH_STATE CruiseSwitch ;
+VAL_ 809 CRUISE_ACTIVE_STATE CruiseState ;
+VAL_ 504 HDC_STATE HdcState ;
+VAL_ 1087 GEARBOX_MODE GearboxMode ;
+VAL_ 1087 GEAR_LEVER GearLever ;
+VAL_ 1087 CONVERTER_CLUTCH_STATE ConverterClutch ;
+
+
+BA_DEF_ BO_ "GenMsgCycleTime" INT 0 30000;
+BA_DEF_DEF_ "GenMsgCycleTime" 0;
+
+BA_ "GenMsgCycleTime" BO_ 790 10;
+BA_ "GenMsgCycleTime" BO_ 809 10;
+BA_ "GenMsgCycleTime" BO_ 1349 10;
+BA_ "GenMsgCycleTime" BO_ 339 20;
+BA_ "GenMsgCycleTime" BO_ 496 20;
+BA_ "GenMsgCycleTime" BO_ 499 20;
+BA_ "GenMsgCycleTime" BO_ 501 10;
+BA_ "GenMsgCycleTime" BO_ 504 20;
+BA_ "GenMsgCycleTime" BO_ 1087 10;
+BA_ "GenMsgCycleTime" BO_ 1555 200;
+BA_ "GenMsgCycleTime" BO_ 1557 200;
