@@ -5,6 +5,7 @@
   import { isEmbedded } from "./lib/embedded";
   import { isDarkTheme } from "./lib/theme.svelte";
   import { BUNDLED_DBC_IDS, loadBundledDbcProfile } from "./lib/dbc-profiles.svelte";
+  import { ensureDefaultLayout, layoutStore } from "./lib/layout.svelte";
   import { chartConfig } from "@emdzej/dashx-widgets";
   import Dashboard from "./components/Dashboard.svelte";
   import DynamicDashboard from "./components/DynamicDashboard.svelte";
@@ -39,6 +40,7 @@
           app.profile = composed.profile;
           app.dbcProfile = composed;
           app.signalMeta = composed.metadata;
+          ensureDefaultLayout(composed, composed.profile.id);
         })
         .catch((err) => {
           if (typeof console !== "undefined") {
@@ -100,6 +102,24 @@
     <span class="text-xs text-faint">via {sourceHint}</span>
 
     <ThemeToggle />
+
+    {#if app.dbcProfile}
+      <button
+        class="rounded border px-2 py-0.5 text-xs transition"
+        class:bg-accent={layoutStore.editMode}
+        class:text-zinc-950={layoutStore.editMode}
+        class:border-accent={layoutStore.editMode}
+        class:bg-surface={!layoutStore.editMode}
+        class:text-muted={!layoutStore.editMode}
+        class:border-divider={!layoutStore.editMode}
+        class:hover:border-accent={!layoutStore.editMode}
+        class:hover:bg-elevated={!layoutStore.editMode}
+        onclick={() => (layoutStore.editMode = !layoutStore.editMode)}
+        title={layoutStore.editMode ? "Exit layout edit mode" : "Edit dashboard layout"}
+      >
+        {layoutStore.editMode ? "Done editing" : "Edit layout"}
+      </button>
+    {/if}
 
     <button
       class="rounded border border-divider bg-surface px-2 py-0.5 text-xs text-muted transition hover:border-accent hover:bg-elevated"

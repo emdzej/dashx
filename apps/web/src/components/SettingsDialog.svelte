@@ -11,6 +11,16 @@
     loadUserDbcProfile,
   } from "../lib/dbc-profiles.svelte";
   import { FsaDirectory } from "@emdzej/bimmerz-vfs";
+  import {
+    ensureDefaultLayout,
+    getLayouts,
+    setActiveLayout,
+    saveLayoutAs,
+    deleteLayout,
+    renameLayout,
+    resetActiveLayout,
+    layoutStore,
+  } from "../lib/layout.svelte";
 
   let dbcStatus = $state<{ kind: "idle" } | { kind: "loading"; id: string } | { kind: "error"; msg: string }>({ kind: "idle" });
 
@@ -44,6 +54,7 @@
         app.profile = composed.profile;
         app.dbcProfile = composed;
         app.signalMeta = composed.metadata;
+        ensureDefaultLayout(composed, composed.profile.id);
         dbcStatus = { kind: "idle" };
       } catch (err) {
         dbcStatus = { kind: "error", msg: err instanceof Error ? err.message : String(err) };
@@ -78,6 +89,7 @@
       app.profile = composed.profile;
       app.dbcProfile = composed;
       app.signalMeta = composed.metadata;
+      ensureDefaultLayout(composed, composed.profile.id);
       app.config.vehicle = composed.profile.id;
       dbcStatus = { kind: "idle" };
     } catch (err) {
@@ -260,6 +272,83 @@
             </div>
           {/if}
         </fieldset>
+
+        {#if app.dbcProfile}
+          {@const profileId = app.dbcProfile.profile.id}
+          {@const layouts = getLayouts(profileId)}
+          {@const activeId = layoutStore.activeId[profileId] ?? "default"}
+          <fieldset class="space-y-2 rounded border border-divider bg-base p-3">
+            <legend class="px-1 text-xs font-semibold uppercase tracking-wider text-faint">
+              Dashboard layout
+            </legend>
+
+            <label class="block text-xs text-muted">
+              Active layout
+              <select
+                class="mt-0.5 w-full rounded border border-rule bg-surface px-2 py-1 text-sm text-foreground"
+                value={activeId}
+                onchange={(e) => setActiveLayout(profileId, (e.currentTarget as HTMLSelectElement).value)}
+              >
+                {#each layouts as l (l.id)}
+                  <option value={l.id}>{l.name}</option>
+                {/each}
+              </select>
+              <span class="mt-1 block text-faint">
+                Per-vehicle. Add, switch, and rename layouts here; edit
+                their contents from the dashboard's Edit Layout mode.
+              </span>
+            </label>
+
+            <div class="flex flex-wrap items-center gap-2 text-xs">
+              <button
+                type="button"
+                class="rounded border border-divider bg-surface px-2 py-1 text-muted hover:border-accent hover:bg-elevated"
+                onclick={() => {
+                  const name = prompt("Name this layout:", "My layout");
+                  if (!name || !app.dbcProfile) return;
+                  const active = layouts.find((l) => l.id === activeId) ?? layouts[0];
+                  if (active) saveLayoutAs(profileId, name, active);
+                }}
+              >
+                Save as…
+              </button>
+              <button
+                type="button"
+                class="rounded border border-divider bg-surface px-2 py-1 text-muted hover:border-accent hover:bg-elevated disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={activeId === "default"}
+                onclick={() => {
+                  const current = layouts.find((l) => l.id === activeId);
+                  const name = prompt("New name:", current?.name ?? "");
+                  if (name) renameLayout(profileId, activeId, name);
+                }}
+              >
+                Rename
+              </button>
+              <button
+                type="button"
+                class="rounded border border-divider bg-surface px-2 py-1 text-muted hover:border-red-500 hover:text-red-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={activeId === "default" || layouts.length <= 1}
+                onclick={() => {
+                  if (confirm("Delete this layout?")) deleteLayout(profileId, activeId);
+                }}
+              >
+                Delete
+              </button>
+              <button
+                type="button"
+                class="rounded border border-divider bg-surface px-2 py-1 text-muted hover:border-amber-500 hover:text-amber-500"
+                onclick={() => {
+                  if (!app.dbcProfile) return;
+                  if (confirm("Reset this layout to overlay defaults?")) {
+                    resetActiveLayout(app.dbcProfile, profileId);
+                  }
+                }}
+              >
+                Reset to default
+              </button>
+            </div>
+          </fieldset>
+        {/if}
 
         <fieldset class="space-y-2 rounded border border-divider bg-base p-3">
           <legend class="px-1 text-xs font-semibold uppercase tracking-wider text-faint">Charts</legend>

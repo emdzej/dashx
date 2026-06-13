@@ -21,6 +21,7 @@
     "@emdzej/dashx-can-transport": "workspace:*",
     "@emdzej/dashx-vehicles": "workspace:*",
     "@emdzej/dashx-widgets": "workspace:*",
+    "svelte-dnd-action": "^0.9.70",
     "workbox-window": "^7.4.1"
   },
   "devDependencies": {
