@@ -1,6 +1,6 @@
 {
   "name": "@emdzej/dashx-can-decoder",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Frame + signal contracts for DASHX. CanFrame shape, SignalDecoder type, byte-helper utilities (leU16/beU16/scaled). Used by per-vehicle profiles and the web app's reactive decode pipeline.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

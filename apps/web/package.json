@@ -1,6 +1,6 @@
 {
   "name": "@emdzej/dashx-web",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Browser SPA for DASHX — live CAN dashboard. Connect to a vehicle bus, decode broadcast frames, render gauges + lamps + frame log.",
   "private": true,
   "type": "module",

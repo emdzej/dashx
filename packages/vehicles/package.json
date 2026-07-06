@@ -1,6 +1,6 @@
 {
   "name": "@emdzej/dashx-vehicles",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Per-vehicle CAN signal tables for DASHX. v1 ships BMW E46 PT-CAN — MS42 (M52TU) + MS43 (M54) DME, MK60 DSC, IKE.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

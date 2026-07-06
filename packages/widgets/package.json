@@ -1,6 +1,6 @@
 {
   "name": "@emdzej/dashx-widgets",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Shared Svelte 5 dashboard widgets for DASHX — Gauge, Bar, Lamp, Value, FrameLog. Source-only; consumer apps' Vite + svelte plugin compiles them so HMR and tree-shake work end-to-end.",
   "type": "module",
   "main": "src/index.ts",

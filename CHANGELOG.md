@@ -4,6 +4,23 @@ All notable changes to **dashx** are documented here. Versions follow
 [Semantic Versioning](https://semver.org/); format adapted from
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## 0.2.1 — 2026-07-06 — connect() idempotence
+
+Prophylactic patch. `useEmbeddedAutoConnect`'s `$effect` re-runs on
+any reactive state it reads, and `connect()`'s own
+`app.status = { kind: 'connecting' }` is a reactive write — so the
+hook could re-enter `connect()` before the first WebSocket finished
+opening, spinning up N parallel sockets. Same class of bug that hit
+ncsx (~20 sockets against `/rpc/ediabasx` from a single Connect).
+Adds the same idempotence guard inpax's `connect()` has had since
+0.11.0.
+
+### Fixed
+
+- `apps/web/src/lib/connection.svelte.ts` — early-return from
+  `connect()` when `app.status.kind === 'connecting'` or when
+  already `'connected'`.
+
 ## 0.2.0 — 2026-07-06 — Embedded auto-connect + release artefact
 
 Wires the dongle-embedded dashx-web into the shared
