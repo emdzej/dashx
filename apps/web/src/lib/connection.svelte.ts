@@ -161,6 +161,16 @@ async function buildTransport(): Promise<CanTransport | null> {
 }
 
 export async function connect(): Promise<void> {
+  /* Idempotence — the auto-connect hook's `$effect` re-runs whenever
+     any reactive state it reads changes, including our own
+     `app.status.kind`. Setting `.kind = 'connecting'` below is
+     itself a reactive write, so without this guard the hook would
+     re-enter connect() before the first attempt finishes, spinning
+     up N parallel WebSockets. Matches the same guard inpax's
+     connect() uses. */
+  if (app.status.kind === "connecting") return;
+  if (app.status.kind === "connected") return;
+
   if (!app.profile) {
     app.status = { kind: "error", message: "Pick a vehicle profile in Settings first." };
     return;
