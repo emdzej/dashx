@@ -44,8 +44,12 @@ export interface CompiledExpression {
 }
 
 /** Input map: signal id → current value (or `null`/`undefined`
- *  when not yet decoded). */
-export type ExprScope = Record<string, number | boolean | null | undefined>;
+ *  when not yet decoded). Strings are accepted (the `SignalValue`
+ *  union allows them — e.g. gear-position labels) but treated as
+ *  non-numeric inputs; expressions referencing string-valued
+ *  signals coerce via JS rules (`"3" + 1 === "31"`) so authors
+ *  should avoid mixing types in one expression. */
+export type ExprScope = Record<string, number | boolean | string | null | undefined>;
 
 /** Maximum expression source length. Keeps a malicious overlay
  *  from shipping a 10 MB string and locking up the UI thread. */
