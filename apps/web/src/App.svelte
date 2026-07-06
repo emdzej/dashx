@@ -1,9 +1,28 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import { useEmbeddedAutoConnect } from "@emdzej/bimmerz-ui";
+  import { getLogger } from "@emdzej/bimmerz-logger";
   import { app } from "./lib/state.svelte";
   import { connect, disconnect } from "./lib/connection.svelte";
   import { isEmbedded } from "./lib/embedded";
   import { isDarkTheme } from "./lib/theme.svelte";
+
+  /* Embedded-mode lifecycle — dongle-hosted dashx auto-connects to
+     the same-origin `/rpc/can/0` CAN endpoint on mount, retries with
+     exponential backoff on transient drops (1 → 2 → 4 → 8 → 16 → 30 s
+     cap), and disconnects cleanly on `beforeunload` / `pagehide`.
+     No `isReady` gate — dashx doesn't require an install like inpax /
+     ncsx; the connection can be attempted immediately. No-op in the
+     browser build so the manual Connect button keeps ownership. */
+  const autoConnectLog = getLogger("dashx.autoconnect");
+  useEmbeddedAutoConnect({
+    isEmbedded,
+    connect,
+    disconnect,
+    isConnected: () => app.status.kind === "connected",
+    log: (msg: string, level?: "info" | "warn" | "error") =>
+      autoConnectLog[level ?? "info"](msg),
+  });
   import { BUNDLED_DBC_IDS, loadBundledDbcProfile } from "./lib/dbc-profiles.svelte";
   import { ensureDefaultLayout, layoutStore } from "./lib/layout.svelte";
   import { chartConfig } from "@emdzej/dashx-widgets";

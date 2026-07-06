@@ -40,6 +40,40 @@ export default defineConfig(({ mode }) => {
     },
     plugins: [
       svelte(),
+      /* Bimmerz Box app manifest. The dongle's dashboard auto-
+         discovers apps under `/sdcard/apps/<slug>/` and reads each
+         folder's `manifest.json` to render a tile — see
+         https://github.com/emdzej/bimmerz-box#app-manifest. Emitting
+         from the plugin (not a static file in `public/`) keeps the
+         `version` field in lockstep with package.json without a
+         manual bump on every release. Only relevant to the embedded
+         build. */
+      isEmbedded && {
+        name: "dashx-embedded-manifest",
+        apply: "build" as const,
+        generateBundle(): void {
+          this.emitFile({
+            type: "asset",
+            fileName: "manifest.json",
+            source: JSON.stringify(
+              {
+                name: "DASHX",
+                description: "Live CAN dashboard — gauges, lamps, frame log",
+                version: pkg.version,
+                icon: "icon.svg",
+                /* Advisory — the dashboard flags tiles whose
+                   requirements aren't met by the dongle hardware.
+                   Dashx drives CAN via `/rpc/can/0` (BMW PT-CAN /
+                   F-CAN buses through the dongle's TJA1051T
+                   transceivers). */
+                requires: ["can"],
+              },
+              null,
+              2,
+            ) + "\n",
+          });
+        },
+      },
       /* PWA skipped in the embedded build — no offline-cache benefit
          on hardware with no internet. */
       !isEmbedded &&
@@ -66,6 +100,15 @@ export default defineConfig(({ mode }) => {
     server: {
       /* Sidestep ediabasx-web (5173), inpax-web (5174), ncsx-web (5175). */
       port: 5176,
+    },
+    optimizeDeps: {
+      /* `@emdzej/bimmerz-ui` ships source-only `.svelte` +
+         `.svelte.ts`. Excluded from pre-bundling so each file goes
+         through `@sveltejs/vite-plugin-svelte`'s transform on-demand
+         — esbuild lacks the loader for those extensions and would
+         choke on TS syntax in a `.svelte.ts` rune helper. Same
+         pattern the ediabasx / inpax / ncsx web apps use. */
+      exclude: ["@emdzej/bimmerz-ui"],
     },
     build: {
       outDir: isEmbedded ? "dist-embedded" : "dist",

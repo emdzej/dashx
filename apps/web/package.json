@@ -1,6 +1,6 @@
 {
   "name": "@emdzej/dashx-web",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Browser SPA for DASHX — live CAN dashboard. Connect to a vehicle bus, decode broadcast frames, render gauges + lamps + frame log.",
   "private": true,
   "type": "module",
@@ -9,12 +9,14 @@
     "build": "vite build",
     "build:embedded": "vite build --mode embedded",
     "preview": "vite preview",
+    "preview:embedded": "vite preview --mode embedded",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit && svelte-check --tsconfig ./tsconfig.json"
   },
   "dependencies": {
     "@emdzej/bimmerz-logger": "^0.1.2",
     "@emdzej/bimmerz-theme": "^0.1.0",
+    "@emdzej/bimmerz-ui": "^0.2.0",
     "@emdzej/bimmerz-vfs": "^0.1.0",
     "@emdzej/dashx-can-decoder": "workspace:*",
     "@emdzej/dashx-can-obd2": "workspace:*",

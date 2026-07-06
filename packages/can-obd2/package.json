@@ -1,6 +1,6 @@
 {
   "name": "@emdzej/dashx-can-obd2",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "OBD-II Mode 01 over CAN (ISO 15765-4) — ISO-TP single-frame encoder/decoder, Mode 01 PID library, request/response client. Used by DASHX to surface fuel trims, lambda voltage, battery voltage, and other diagnostic-only signals not on the broadcast bus.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

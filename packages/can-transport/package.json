@@ -1,6 +1,6 @@
 {
   "name": "@emdzej/dashx-can-transport",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "CanTransport interface + implementations for DASHX. Ships RpcCanTransport (wraps @emdzej/bimmerz-rpc-can), SerialCanTransport (SLCAN over Web Serial), and SlcanWsTransport (SLCAN over WebSocket).",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
